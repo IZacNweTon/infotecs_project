@@ -6,6 +6,7 @@
 #include<iostream>
 #include<fstream>
 #include<string.h>
+#include <unistd.h>
 
 void Eratosthenes(primes& cont, uint32_t max = 100){
     cont = primes(max);
@@ -22,6 +23,20 @@ void Eratosthenes(primes& cont, uint32_t max = 100){
         }
     }
     delete[] arr;
+}
+
+
+void read(primes& a, std::fstream &input){
+    uint32_t temp;
+    while(input >> temp){
+        a.push_back(temp);
+    }
+}
+
+void remember(primes& a, std::fstream &output){
+    for(int i = 0; i < a.size(); i++){
+        output << a[i] << std::endl;
+    }
 }
 
 void Modified_search(uint32_t amount, primes& arr){
@@ -56,34 +71,49 @@ bool is_palindrome(uint32_t var){
 
 
 
-bool print(primes& arr, std::ostream& output = std::cout, std::string type = "none"){
+bool print(primes& arr, bool console = true,std::ostream& output = std::cout, std::string type = "none"){
+    char separate;
+    if(console) separate = ' ';
+    else separate = '\n';
     if(type == "none"){
         for(int i = 0; i < arr.size(); i++){
-            output << arr[i] << std::endl;
+            output << arr[i] << separate;
         }
     }else if(type == "superprime"){
         int i = 0;
         while(arr[i] <= arr.size()){
-            output << arr[arr[i] - 1] << std::endl;
+            output << arr[arr[i] - 1] << separate;
             i++;
         }
     }else if(type == "palindrome"){
         for(int i = 0; i < arr.size(); i++){
-            if(is_palindrome(arr[i])) output << arr[i] << std::endl;
+            if(is_palindrome(arr[i])) output << arr[i] << separate;
         }
     } else{
-        std::cout << "unknown sequence. try 'palindrome' or 'superptime' " << std::endl;
+        std::cout << "unknown sequence. try 'palindrome' or 'superptime' " << separate;
         return false;
     }
-    std::cout << "successfully written to file" << std::endl;
+    std::cout << "successfully written" << separate;
     return true;
 }
 
 bool is_sequence(const char* str){
-    if(strcmp(str, "superprime") == 0 || strcmp(str, "palindrome") == 0) return true;
-    else return false;
+    return (strcmp(str, "superprime") == 0 || strcmp(str, "palindrome") == 0);
 }
 
+bool FileExists(const char *fname)
+{
+    return access(fname, 0) != -1;
+}
 
+uint32_t stouint32_t(const char* str){
+    if(strlen(str) > 10) return 0;
+    if(atoll(str) <= 0) return 0;
+    else if(atoll(str) > 4294967295) return 0;
+    else return atoll(str);
+}
 
+bool is_number(const char* str){
+    return (stouint32_t(str) > 0);
+}
 #endif // FUNCTIONS_H
